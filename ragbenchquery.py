@@ -1,20 +1,10 @@
 from pymilvus import MilvusClient
 import json
 import requests
-from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer('all-MiniLM-L6-v2')
+from embeddings import emb_text, get_llm_response
 collection_name = "my_rag_collection"
 
-# def emb_text(text):
-#     return (
-#         openai_client.embeddings.create(input=text, model="text-embedding-3-small")
-#         .data[0]
-#         .embedding
-#     )
-
-def emb_text(text):
-    return model.encode(text).tolist()
+# Embedding function is now imported from embeddings.py
 
 
 question = "How is data stored in milvus?"
@@ -71,18 +61,7 @@ Use the following pieces of information enclosed in <context> tags to provide an
 
 
 
-def get_llm_response(system_prompt, user_prompt, model="llama2"):
-    """Get response from local Ollama model"""
-    try:
-        response = requests.post('http://localhost:11434/api/generate',
-                               json={
-                                   'model': model,
-                                   'prompt': f"{system_prompt}\n\n{user_prompt}",
-                                   'stream': False
-                               })
-        return response.json()['response']
-    except Exception as e:
-        return f"Error: Could not connect to Ollama. Make sure it's running with: ollama serve\nError: {e}"
+# LLM response function is now imported from embeddings.py
 
 # Get response from local LLM
 response = get_llm_response(SYSTEM_PROMPT, USER_PROMPT)
